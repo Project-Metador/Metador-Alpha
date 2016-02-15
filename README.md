@@ -1,4 +1,4 @@
 # MetadorAlpha
-Metador - Revision Alpha x.x releases.
+Metador - Revision: Alpha x.x, code releases.  Coming soon.
 
-Coming soon.
+
