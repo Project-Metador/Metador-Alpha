@@ -1,5 +1,5 @@
 /* meta-node-server.js
- * Revision: Alpha 0.0.1
+ * Revision: Alpha v0.0.1
  * Description: Prototype, proof of concept.
  * Author: Darren Decker, deckerd@guruassist.com 
  */
