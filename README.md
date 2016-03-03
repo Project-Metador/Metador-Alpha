@@ -36,6 +36,6 @@ A lightweight 3D desktop application framework.  The "Features" list sets the st
     
 Questions?
 
-Feel free to leave a question in Gitter using the link below.  You can check back at a later time to view the answer.
+Feel free to leave a question in Gitter using the link button below.  You can check back at a later time to view the answer.
 
 [![Gitter](https://badges.gitter.im/TheMetador/MetadorAlpha.svg)](https://gitter.im/TheMetador/MetadorAlpha?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
