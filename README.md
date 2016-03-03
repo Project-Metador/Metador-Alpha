@@ -2,7 +2,7 @@
 
 # Description
 
-    A lightweight desktop application.
+    A lightweight 3D desktop application.
     
 # Features
 
