@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Metador Background</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">    
+    <script type="application/javascript">
+    function init(){
+        var source = new EventSource("/sse");
+        source.onmessage = function(event){
+            showLogoText();
+        }        
+        draw();
+    }    
+    function draw(){
+        var lineWidth, canvas, ctx;  
+        lineWidth = 5;
+        canvas = document.getElementById("background");        
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+        ctx = canvas.getContext("2d");        
+        ctx.fillStyle = "#1C75BC"; //blue
+        ctx.fillRect (0, 0, lineWidth, canvas.height);
+        ctx.fillRect (canvas.width - lineWidth, 0, lineWidth, canvas.height);
+    }
+    
+    function showLogoText(){        
+        var lt = document.getElementById("logoText");
+        var x = 0;        
+        fadeIn();                
+        function fadeIn(){
+            x += 0.1;
+            lt.style.opacity = x;
+            if(x < 1) setTimeout(function(){fadeIn()},100);
+        }       
+    }
+    
+    window.addEventListener( 'resize', onWindowResize, false );
+       
+    function onWindowResize() {
+       draw();
+    }
+    </script>
+    <style>
+        body {
+            color: #ffffff;        			
+            margin: 0px;
+            overflow: hidden;
+        }
+        .background{            
+            position: absolute; 
+            z-index: 0;
+        }
+        .logoText{
+            margin: 0;            
+            height: 133px;
+            width: 50px;
+            left: 50%;
+            float: left;
+            opacity: 0;            
+            -webkit-transform: translate(-25px,315px);
+            transform: translate(-25px,315px);
+            position: absolute;
+            z-index: 5;
+        }
+    </style>    
+</head>
+<body onload="init();">
+    <div class="background"><canvas id="background"></canvas></div>
+    <div class="logoText" id="logoText"><embed type="image/svg+xml" src="/Images/logo_vert_text.svg"/></div>    
+</body>
+</html>

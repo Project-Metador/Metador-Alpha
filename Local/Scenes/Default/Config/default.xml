@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<scene>
+  <node-server>
+    <address>127.0.0.1</address>
+    <port>8090</port>  
+  </node-server>
+  <window>
+   <id>0</id>
+   <z>-1</z>
+   <title>MetadorLogo</title>   
+   <application>..\\Application\\mctdor\\mctdor.exe</application>
+   <source>http://localhost:8080/foreground.html</source>
+   <top>-100</top>
+   <left>560</left>      
+   <height>800</height>
+   <width>800</width>
+  </window>
+  <window>
+   <id>1</id>
+   <z>0</z>
+   <title>MetadorOP</title>
+   <application>..\\Application\\mcodor\\mcodor.exe</application>
+   <source>http://localhost:8081/background.html</source>
+   <top>0</top>
+   <left>920</left>
+   <height>1080</height>
+   <width>80</width>   
+  </window>  
+</scene>

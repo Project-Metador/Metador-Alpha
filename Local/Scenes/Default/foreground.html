@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Logo</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <script src="../build/three.min.js"></script>
+		<script src="js/loaders/ColladaLoader.js"></script>
+		<style>
+			body {
+				font-family: Monospace;				
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+    <body>		
+		<script>
+			var container;
+
+			var camera, scene, renderer;
+            var objectsLoaded = 2;
+			var particleLight;
+			var metadorObjTop, metadorObjBottom;
+            var objects = [];
+            
+            var raycaster = new THREE.Raycaster();
+			var mouse = new THREE.Vector2(),			
+			INTERSECTED, SELECTED;
+            
+            var loader1 = new THREE.ColladaLoader();
+			loader1.options.convertUpAxis = true;        
+			loader1.load( './models/metadorLogo/metador_logo_bottom.dae', function ( collada ) {
+				metadorObjBottom = collada.scene.children[1];
+                metadorObjBottom.id = "mob";
+                metadorObjBottom.children[0].material = new THREE.MeshLambertMaterial({ 
+                                                         map: metadorObjBottom.children[0].material.map,
+                                                         color: 0x1c75bc
+                                                          });
+			}, function(progress){                
+                var percentLoaded = Math.round(progress.loaded/progress.total) * 100;
+                if(percentLoaded == 100){                   
+                   runInit(); 
+                }
+             });
+                        
+            var sphere = new THREE.SphereGeometry(0.5, 0.5, 0.5);
+            var spherMat = new THREE.MeshLambertMaterial({color: 0x5555ff, visible: false});
+            var sphereMesh = new THREE.Mesh(sphere, spherMat);
+            sphereMesh.position.set(0, 0, 0);
+                      
+            pivotPoint = new THREE.Object3D();
+            sphereMesh.add(pivotPoint);
+            
+            var loader2 = new THREE.ColladaLoader();
+			loader2.options.convertUpAxis = true;
+            loader2.load( './models/metadorLogo/metador_logo_top.dae', function ( collada ) {
+				metadorObjTop = collada.scene.children[1];
+                metadorObjTop.id = "mot";
+                metadorObjTop.children[0].material = new THREE.MeshLambertMaterial( { 
+                                                         map: metadorObjTop.children[0].material.map,
+                                                         color: 0xed1c24
+                                                          } );                
+            }, function(progress){
+                
+                var percentLoaded = Math.round(progress.loaded/progress.total) * 100;
+                if(percentLoaded == 100){                   
+                   runInit(); 
+                }
+            });
+            
+            function runInit(){
+                objectsLoaded--;
+                if(objectsLoaded <= 0) setTimeout(function(){init()},50);
+            }
+
+			function init() {
+
+				container = document.createElement( 'div' );                
+				document.body.appendChild( container );
+                
+                var info = document.createElement( 'div' );
+                info.id = 'info';
+				info.style.position = 'absolute';
+				info.style.top = '10px';
+				info.style.width = '100%';
+				info.style.textAlign = 'center';				
+				container.appendChild( info );
+
+				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
+
+				scene = new THREE.Scene();                
+                scene.add(sphereMesh);				                
+				scene.add( metadorObjTop );
+                scene.add( metadorObjBottom );                
+				particleLight = new THREE.Mesh( new THREE.SphereGeometry( 4, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0x404040, visible:false } ) );                
+				scene.add( particleLight );               
+
+				var pointLight = new THREE.PointLight( 0x404040, 4 );
+                pointLight.intensity = 20;
+                particleLight.position.x = 0
+				particleLight.position.y = 5;                
+                particleLight.position.z = 0;
+                particleLight.add( pointLight );
+                
+                pointLight2 = new THREE.PointLight( 0x404040, 5, 9 );                
+                pointLight2.intensity = 7;
+                pointLight2.position.x = 2
+				pointLight2.position.y = 4;                
+                pointLight2.position.z = 12;
+                scene.add( pointLight2 );
+                
+                pointLight3 = new THREE.PointLight( 0x404040, 5, 9 );                
+                pointLight3.intensity = 7;
+                pointLight3.position.x = -2
+				pointLight3.position.y = 4;                
+                pointLight3.position.z = 12;
+                scene.add( pointLight3 );
+                
+                raycaster = new THREE.Raycaster();
+                
+                var geometry = new THREE.BoxGeometry( 2.5, 5, 0.6 );
+                
+                var trigger = new THREE.Mesh( geometry, 
+                             new THREE.MeshLambertMaterial( { color: 0xbe0101, visible: false, wireframe: true } ) );
+                trigger.name = "motrig";
+                              
+                trigger.position.y = 2.5;
+                               
+                scene.add( trigger );
+				objects.push( trigger );
+
+				renderer = new THREE.WebGLRenderer( {antialias:true, alpha:true});
+                renderer.autoClear = true;                
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+                renderer.sortObjects = true;
+				container.appendChild( renderer.domElement );
+                
+                camera.position.y = 0;
+                camera.position.x = 0;
+                camera.position.z = 20;                
+                camera.lookAt( scene.position );
+                
+                renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
+                renderer.domElement.addEventListener( 'click', onDocumentMouseClick, false );
+                window.addEventListener( 'resize', onWindowResize, false );
+                
+                render();
+			}
+            
+            function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+                
+                camera.updateProjectionMatrix();				
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+                
+                render();
+
+			}
+            
+            function onDocumentMouseMove( event ) {
+
+				event.preventDefault();
+                
+                raycaster.setFromCamera( mouse, camera );                
+
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+                
+				if ( SELECTED ) {
+					
+					return;
+				}
+
+				var intersects = raycaster.intersectObjects( objects );
+                
+				if ( intersects.length > 0 ) {
+                    
+					if ( INTERSECTED != intersects[ 0 ].object ) {
+					
+						INTERSECTED = intersects[ 0 ].object;
+                    }
+                        
+					container.style.cursor = 'pointer';
+
+				} else {
+                    
+					INTERSECTED = null;
+					container.style.cursor = 'auto';
+				}
+
+			}
+            
+            function onDocumentMouseClick( event ) {
+
+				event.preventDefault();
+
+				raycaster.setFromCamera( mouse, camera );
+
+				var intersects = raycaster.intersectObjects( objects );
+
+				if ( intersects.length > 0 ) {
+
+					SELECTED = intersects[ 0 ].object;
+
+					if ( intersects.length > 0 ) {
+                        
+                        var xmlHttp = new XMLHttpRequest();
+                        xmlHttp.open("GET", "/logo_clicked", true);
+                        xmlHttp.send();
+                        logoMoveForward();
+					}
+                    					
+                    container.style.cursor = 'auto';
+
+				}
+
+			}
+            
+            function logoRotate(){
+               
+                var dir = 0; 
+                move();                
+                
+                function move(){
+                    
+                    if(dir == 0){
+                        metadorObjTop.rotation.y += 0.003;                  
+                        metadorObjBottom.rotation.y += 0.003;
+                        if(metadorObjTop.rotation.y > 0.4) dir = 1;
+                    } else {
+                        metadorObjTop.rotation.y -= 0.003;
+                        metadorObjBottom.rotation.y -= 0.003;
+                        if(metadorObjTop.rotation.y < -0.4) dir = 0;
+                    }
+                    render();
+                    setTimeout(function(){move()},20);
+                }                
+            }
+            
+            function logoRotateAroundPoint(){               
+                
+                var div = document.getElementById('info');
+                
+                pivotPoint.add(metadorObjTop);
+                pivotPoint.add(metadorObjBottom);                
+                
+                var xmlHttp = new XMLHttpRequest();
+                var zToggle = false;                
+                                 
+                move();                
+                
+                function move(){
+                    if(pivotPoint.rotation.y >= 6.232625) pivotPoint.rotation.y = 0;
+                    pivotPoint.rotation.y += 0.052375;
+                    div.innerHTML = pivotPoint.rotation.y;
+                    render();
+                    if(pivotPoint.rotation.y >= 1.57125 && pivotPoint.rotation.y <= 1.7 && zToggle == false){
+                        zToggle = true;
+                        xmlHttp.open("GET", "/logo_set_z_bottom", true);
+                        xmlHttp.send();
+                    } else if(pivotPoint.rotation.y >= 4.71375 && zToggle == true){
+                        zToggle = false;
+                        xmlHttp.open("GET", "/logo_set_z_topmost", true);
+                        xmlHttp.send();
+                    }                    
+                    setTimeout(function(){move()},30);                    
+                }                
+            }
+            
+            function logoMoveForward(){
+                
+                var steps = 75;                                 
+                move(steps);
+                
+                function move(steps){
+                    metadorObjTop.position.z += 0.1;
+                    metadorObjBottom.position.z += 0.1;
+                    render();                    
+                    if(steps > 0) setTimeout(function(){move(steps)},5);
+                    steps--;                   
+                }                
+                setTimeout(function(){logoRotateAroundPoint()},1000);
+            }
+                        
+			function render() {                
+                renderer.render( scene, camera );
+			}
+
+		</script>
+	</body>
+</html>
