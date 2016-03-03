@@ -30,7 +30,7 @@
 # Instructions
 
     Download
-    Install dependant node.js modules listed in package.json
+    Install dependent node.js modules listed in package.json
     From the command-prompt type: metactrl.exe --xml-file default.xml
     
 Questions?
