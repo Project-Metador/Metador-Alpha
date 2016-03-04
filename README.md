@@ -40,4 +40,4 @@ Questions?
 
 Feel free to leave a question in Gitter using the link button below.  You can check back at a later time to view the answer.
 
-[![Gitter](https://badges.gitter.im/TheMetador/MetadorAlpha.svg)](https://gitter.im/TheMetador/MetadorAlpha?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Gitter](https://badges.gitter.im/Project-Metador/Metador-Alpha.svg)](https://gitter.im/Project-Metador/Metador-Alpha?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
