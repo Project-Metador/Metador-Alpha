@@ -5,7 +5,7 @@ Alpha Revision: 0.0.1 (Windows 10.1, 64 bit only)
 
 A lightweight 3D desktop application framework.  The "Features" list sets the stage for what is possible with the framework.
 
-Visit the [Wiki](https://github.com/Project-Metador/Metador-Alpha/wiki) for technical specifications.
+Visit the [Wiki](https://github.com/Project-Metador/Metador-Alpha/wiki) for code specifications.
     
 # Features
 
